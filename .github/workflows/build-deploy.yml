@@ -1,8 +1,14 @@
 name: Deploy to Amazon ECS
 
 on:
-  push:
-    branches: [main]
+  workflow_call:
+    inputs:
+      config-path:
+        required: false
+        type: string
+    secrets:
+      token:
+        required: false
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
