@@ -1,8 +1,14 @@
 name: Cleanup Workspace
 
 on:
-  push:
-    branches: ["main"]
+  workflow_call:
+    inputs:
+      config-path:
+        required: false
+        type: string
+    secrets:
+      token:
+        required: false
 
 jobs:
   cleanup_workspace:
