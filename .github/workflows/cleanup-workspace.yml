@@ -1,0 +1,15 @@
+name: Cleanup Workspace
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  cleanup_workspace:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Clean workspace
+        run: |
+          echo 'Limpando WS...'
+          sudo rm -rf ${{ github.workspace }}/*

@@ -1,0 +1,31 @@
+name: Sa3 Validate
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  sa3_validate:
+    name: Running Sa3 Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3.1.0
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Zip docs folder
+        run: |
+          rm -rf ./validator.json
+          rm -rf libs_pipeline.zip
+          if [ -d ".github/" ]; then
+            zip -v -r -p libs_pipeline.zip .github/
+          else
+            echo "pasta obrigatória .github não encontrada"
+            exit 1
+          fi
