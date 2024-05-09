@@ -16,9 +16,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check if on dev branch
+      - name: Check if on prd branch
         run: |
-          if [ "$GITHUB_REF" != "refs/heads/dev" ]; then
+          if [ "$GITHUB_REF" != "refs/heads/prd" ]; then
             echo "This workflow can only run on the dev branch."
             exit 1
           fi
