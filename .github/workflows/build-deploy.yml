@@ -61,23 +61,18 @@ jobs:
       with:
         mask-password: 'true'
 
-    - name: Build
-      uses: docker/build-push-action@v5.3.0
-      with:
-        context: ./src
-        file: ./src/Dockerfile
-        push: true
-        tags: |
-          gabrielfherrera/proj_esteira:${{github.run_number}}
-          gabrielfherrera/proj_esteira:latest
-
-    - name: Push image to Amazon ECR
-      id: Push-image
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: dev-
+        IMAGE_TAG: ${{ github.ref_name }}-${{ github.event.number }}
       run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
@@ -85,7 +80,7 @@ jobs:
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name: ${{ env.CONTAINER_NAME }}
-        image: 731083046316.dkr.ecr.us-east-1.amazonaws.com/dev-application-test-api:dev-
+        image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
