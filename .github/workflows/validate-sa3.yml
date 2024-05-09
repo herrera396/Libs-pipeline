@@ -16,6 +16,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check if on dev branch
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/dev" ]; then
+            echo "This workflow can only run on the dev branch."
+            exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v3.1.0
         with:
@@ -38,3 +45,4 @@ jobs:
             echo "pasta obrigatória .github não encontrada"
             exit 1
           fi
+
