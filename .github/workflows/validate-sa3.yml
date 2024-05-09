@@ -19,23 +19,12 @@ jobs:
       - name: Check if on prd branch
         run: |
           if [ "$GITHUB_REF" != "refs/heads/prd" ]; then
-            echo "This workflow can only run on the dev branch."
+            echo "Este workflow só ocorrerá na branch prd"
             exit 1
           fi
 
-      - name: Checkout repository
-        uses: actions/checkout@v3.1.0
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-
       - name: Zip docs folder
         run: |
-          rm -rf ./validator.json
-          rm -rf libs_pipeline.zip
           if [ -d ".github/" ]; then
             zip -v -r -p libs_pipeline.zip .github/
           else
